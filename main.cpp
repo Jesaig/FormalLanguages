@@ -161,9 +161,21 @@ void readRegExp(std::string& regExp, std::string& test){
     }
 }
 
-bool checkIfSuffixIsIncluded(std::string& test){
+bool isEmptyWordIncluded() {
     StackElement resCondition = res.top();
     res.pop();
+
+    for(size_t i = 0; i < resCondition.possibleWord.size(); ++i) {
+        if(resCondition.possibleWord[i][i]) {
+            lengthOfTheBiggestSuffix = 0;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool checkIfSuffixIsIncluded(std::string& test){
+    StackElement resCondition = res.top();
 
     int firstPos = 0;
     while (firstPos < sizeOfWord) {
@@ -174,7 +186,7 @@ bool checkIfSuffixIsIncluded(std::string& test){
             ++firstPos;
         }
     }
-    return false;
+    return isEmptyWordIncluded();
 }
 
 int main() {

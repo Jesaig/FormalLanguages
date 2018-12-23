@@ -124,7 +124,7 @@ void readRegExp(std::string& regExp, std::string& test){
 
         switch (symb) {
             case '1':
-                for (auto pos : positions['1']) {
+                for (size_t pos = 0; pos < sizeOfWord; ++pos) {
                     element.possibleWord[pos][pos + 1] = 1;
                 }
                 res.push(element);

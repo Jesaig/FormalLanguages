@@ -40,6 +40,7 @@ void callERROR(){
         exit(1);
     }
 }
+
 void addition(std::string& test){
     callERROR(2);
 
@@ -51,7 +52,7 @@ void addition(std::string& test){
     StackElement resultOfAddition(sizeOfWord);
 
     for (int i = 0; i < sizeOfWord; ++i) {
-        for (int j = i + 1; j < sizeOfWord + 1; ++j) {
+        for (int j = i; j < sizeOfWord + 1; ++j) {
             if (firstArgument.possibleWord[i][j] || secondArgument.possibleWord[i][j]) {
                 resultOfAddition.possibleWord[i][j] = 1;
             }
@@ -61,6 +62,15 @@ void addition(std::string& test){
     res.push(resultOfAddition);
 }
 
+bool isEmptyWordIncluded(const StackElement& elem) {
+    for(size_t i = 0; i < elem.possibleWord.size(); ++i) {
+        if(elem.possibleWord[i][i]) {
+            lengthOfTheBiggestSuffix = 0;
+            return true;
+        }
+    }
+    return false;
+}
 
 void concatenation(std::string& test){
     callERROR(2);
@@ -72,12 +82,7 @@ void concatenation(std::string& test){
     StackElement resultOfConcatenation(sizeOfWord);
 
     for (size_t i = 0; i < sizeOfWord; ++i)
-        for (size_t j = i; j < sizeOfWord + 1; ++j){
-            if (i == j
-                && firstArgument.possibleWord[i][j]
-                && secondArgument.possibleWord[i][j]) {
-                resultOfConcatenation.possibleWord[i][j] = 1;
-            }
+        for (size_t j = i; j < sizeOfWord + 1; ++j) {
             for (size_t k = i; k < j; ++k)
                 if (firstArgument.possibleWord[i][k] && secondArgument.possibleWord[k][j]) {
                     resultOfConcatenation.possibleWord[i][j] = 1;
@@ -86,6 +91,15 @@ void concatenation(std::string& test){
         }
 
     res.push(resultOfConcatenation);
+    if (isEmptyWordIncluded(firstArgument)) {
+        res.push(secondArgument);
+        addition(test);
+    }
+
+    if (isEmptyWordIncluded(secondArgument)) {
+        res.push(firstArgument);
+        addition(test);
+    }
 }
 
 void KleeneStar(unsigned& sizeOfWord, std::string& test) {
@@ -125,7 +139,7 @@ void readRegExp(std::string& regExp, std::string& test){
         switch (symb) {
             case '1':
                 for (size_t pos = 0; pos < sizeOfWord; ++pos) {
-                    element.possibleWord[pos][pos + 1] = 1;
+                    element.possibleWord[pos][pos] = 1;
                 }
                 res.push(element);
                 break;
@@ -161,19 +175,6 @@ void readRegExp(std::string& regExp, std::string& test){
     }
 }
 
-bool isEmptyWordIncluded() {
-    StackElement resCondition = res.top();
-    res.pop();
-
-    for(size_t i = 0; i < resCondition.possibleWord.size(); ++i) {
-        if(resCondition.possibleWord[i][i]) {
-            lengthOfTheBiggestSuffix = 0;
-            return true;
-        }
-    }
-    return false;
-}
-
 bool checkIfSuffixIsIncluded(std::string& test){
     StackElement resCondition = res.top();
 
@@ -186,7 +187,7 @@ bool checkIfSuffixIsIncluded(std::string& test){
             ++firstPos;
         }
     }
-    return isEmptyWordIncluded();
+    return isEmptyWordIncluded(res.top());
 }
 
 int main() {
@@ -199,9 +200,9 @@ int main() {
     callERROR();
 
     if (checkIfSuffixIsIncluded(exampleOfTest)) {
-        std::cout << lengthOfTheBiggestSuffix;
+        std::cout << lengthOfTheBiggestSuffix << '\n';
     } else {
-        std::cout << "INF";
+        std::cout << "INF\n";
     }
 
     return 0;

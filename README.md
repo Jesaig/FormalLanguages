@@ -1,4 +1,4 @@
-# Task from course "Formal languages" in MIPT
+# Task from the course "Formal languages" in MIPT
 
 **Problem**  
 There are given α and word u ∈ {a, b, c}*. Find the length of u's the biggest suffix which belongs to L.
